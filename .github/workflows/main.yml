@@ -1,32 +1,38 @@
-name : program
+name: program
+
 on:
-    push:
-        branches:
-            -main
+  push:
+    branches:
+      - main
+
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-            -name: Checkout Repository
-            uses: actions/checkout@v2
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-            -name: Checkout Repository
-            uses: actions/setup-python@v2
-            with:
-                python-version:3.8
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
 
-            -name: Install Depencies
-            uses: pip install -r requirements.txt
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
 
-            -name: Run Tests
-            run: python -m unittest discover
+      - name: Run Tests
+        run: |
+          python -m unittest discover
 
-            -name: Notify on Success or Failure
-            if: always()
-            uses: actions/slack/notification@v2
-            with:
-                status: ${{job.status}}
-                text: 'Build and test complited'
+      - name: Notify on Success or Failure
+        if: always()
+        uses: actions/slack/notification@v2
+        with:
+          status: ${{ job.status }}
+          text: 'Build and test completed'
 
-
+      - name: Test
+        run: |
+          python Sample.py
