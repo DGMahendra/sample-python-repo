@@ -1,1 +1,32 @@
+name : Python CI
+on:
+    push:
+        branches:
+            -main
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            -name: Checkout Repository
+            uses: actions/checkout@v2
+
+            -name: Checkout Repository
+            uses: actions/setup-python@v2
+            with:
+                python-version:3.8
+
+            -name: Install Depencies
+            uses: pip install -r requirements.txt
+
+            -name: Run Tests
+            run: python -m unittest discover
+
+            -name: Notify on Success or Failure
+            if: always()
+            uses: actions/slack/notification@v2
+            with:
+                status: ${{job.status}}
+                text: 'Build and test complited'
+
 
